@@ -649,3 +649,19 @@ func TestAdOsc(t *testing.T) {
 	result := AdOsc(testHigh, testLow, testClose, testVolume, 3, 10)
 	compare(t, result, "result = talib.ADOSC(testHigh,testLow,testClose,testVolume,3,10)")
 }
+
+func TestPrev(t *testing.T) {
+	result := Prev(testClose, 3)
+	for i := 0; i < len(testClose); i++ {
+		index := 0
+		if i - 3 < 0 {
+			index = 0
+		} else {
+			index = i
+		}
+
+		if result[index] != testClose[index] {
+			t.Fail()
+		}
+	}
+}

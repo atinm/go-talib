@@ -139,6 +139,56 @@ func Ema(inReal []float64, inTimePeriod int) []float64 {
 	return outReal
 }
 
+func Highest(indicator []float64, n int) []float64 {
+	outReal := make([]float64, len(indicator))
+	var end int
+	for index := 0; index < len(indicator); index++ {
+		if math.NaN() == indicator[index] && n != 1 {
+			outReal[index] = Lowest(indicator, n-1)[index-1]
+		}
+
+		if index - n + 1 < 0 {
+			end = 0
+		} else {
+			end = index - n + 1
+		}
+
+		highest := indicator[index]
+		for i := index - 1; i >= end; i-- {
+			if highest < indicator[i] {
+				highest = indicator[i]
+			}
+		}
+		outReal[index] = highest
+	}
+	return outReal
+}
+
+func Lowest(indicator []float64, n int) []float64 {
+	outReal := make([]float64, len(indicator))
+	var end int
+	for index := 0; index < len(indicator); index++ {
+		if math.NaN() == indicator[index] && n != 1 {
+			outReal[index] = Lowest(indicator, n-1)[index-1]
+		}
+
+		if index - n + 1 < 0 {
+			end = 0
+		} else {
+			end = index - n + 1
+		}
+
+		lowest := indicator[index]
+		for i := index - 1; i >= end; i-- {
+			if lowest > indicator[i] {
+				lowest = indicator[i]
+			}
+		}
+		outReal[index] = lowest
+	}
+	return outReal
+}
+
 // HtTrendline - Hilbert Transform - Instantaneous Trendline (lookback=63)
 func HtTrendline(inReal []float64) []float64 {
 
@@ -854,6 +904,19 @@ func MidPrice(inHigh []float64, inLow []float64, inTimePeriod int) []float64 {
 		outReal[outIdx] = (highest + lowest) / 2.0
 		outIdx++
 		today++
+	}
+	return outReal
+}
+
+// Prev - Prev Value
+func Prev(ref []float64, n int) []float64 {
+	outReal := make([]float64, len(ref))
+	for index := 0; index < len(ref); index++ {
+		if index - n < 0 {
+			outReal[index] = ref[0]
+		} else {
+			outReal[index] = ref[index - n]
+		}
 	}
 	return outReal
 }
