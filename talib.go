@@ -83,6 +83,29 @@ func BBands(inReal []float64, inTimePeriod int, inNbDevUp float64, inNbDevDn flo
 	return outRealUpperBand, outRealMiddleBand, outRealLowerBand
 }
 
+func Cross(up []float64, low []float64) []bool {
+	outBool := make([]bool, len(up))
+
+	for index := 0; index < len(up); index++ {
+		i := index
+		if i == 0 || up[i] >= low[i] {
+			outBool[index] = false
+			continue
+		}
+
+		i--
+		if up[i] >= low[i] {
+			outBool[index] = true
+		} else {
+			for i > 0 && up[i] == low[i] {
+				i--
+			}
+			outBool[index] = (i != 0) && (up[i] >= low[i])
+		}
+	}
+	return outBool
+}
+
 // Dema - Double Exponential Moving Average
 func Dema(inReal []float64, inTimePeriod int) []float64 {
 
